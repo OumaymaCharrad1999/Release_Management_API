@@ -6,4 +6,5 @@ import com.releasemanagementapi.model.PlanRelease;
 
 public interface PlanReleaseRepository extends JpaRepository<PlanRelease, Long> {
 
+	
 }

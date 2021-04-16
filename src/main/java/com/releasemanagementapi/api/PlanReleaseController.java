@@ -29,14 +29,14 @@ public class PlanReleaseController {
 
 	}
 	
-	@PostMapping("/{project}")
+	@GetMapping("/{project}")
 	public String prepareNextBuild(@PathVariable String project) {
 		
 		return planReleaseService.prepareNextBuildRelease(project);
 		
 	}
 	
-	@GetMapping("/{project}")
+	@GetMapping("/get-successful-versions/{project}")
 	public List<ReleaseInfo> getSuccessfulVersions(@PathVariable String project) {
 
 		return planReleaseService.getSuccessfulVersions(project);

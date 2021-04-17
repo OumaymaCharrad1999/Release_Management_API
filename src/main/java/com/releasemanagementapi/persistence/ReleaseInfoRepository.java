@@ -12,5 +12,4 @@ public interface ReleaseInfoRepository extends JpaRepository<ReleaseInfo, Long> 
 	public ReleaseInfo findTop1ByProjectOrderByBuildIdDesc(String project);
 	public List<ReleaseInfo> findByProjectAndStatus(String project, String status);
 
-
 }

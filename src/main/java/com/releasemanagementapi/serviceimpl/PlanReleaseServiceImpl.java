@@ -31,77 +31,87 @@ public class PlanReleaseServiceImpl implements PlanReleaseService {
 	@PersistenceContext
 	private EntityManager entityManager;
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public ResponseEntity<?> save(PlanReleaseDTO request) {
+	public ResponseEntity<?> addNewPlanRelease(PlanReleaseDTO request) {
 
 		ModelMapper modelMapper = new ModelMapper();
 		PlanRelease planRelease = modelMapper.map(request, PlanRelease.class);
 		
+		boolean exist = repo.existsByMajorVersionAndMinorVersionAndIntegration(planRelease.getMajorVersion(),planRelease.getMinorVersion(),planRelease.getIntegration());
 		
-		boolean exist = repo.existsByMajorVersionAndMinorVersionAndIntegration
-				(planRelease.getMajorVersion(),
-				planRelease.getMinorVersion(),
-				planRelease.getIntegration());
 		if (exist) {
 			return new ResponseEntity("Plan release existe déjà", HttpStatus.FOUND);
-
 		}
+		
 		PlanRelease result = repo.save(planRelease);
 		return new ResponseEntity(result, HttpStatus.CREATED);
 
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public String prepareNextBuildRelease(String project) {
+	public ResponseEntity<?> prepareNextBuildRelease(String project) {
 
 		ReleaseInfo releaseInfo = releaseInfoRepository.findTop1ByProjectOrderByBuildIdDesc(project);
 		String nextBuild = "";
 
+		if (releaseInfo == null) {
+			return new ResponseEntity("Projet n'existe pas", HttpStatus.NOT_FOUND);
+		}
+		
 		if (releaseInfo.getStatus().equalsIgnoreCase("Installed")) {
 			entityManager.detach(releaseInfo);
 			releaseInfo.setId(null);
 			releaseInfo.setStatus("Null");
 			releaseInfo.setBuildId(releaseInfo.getBuildId() + 1);
 			releaseInfoRepository.save(releaseInfo);
-			nextBuild = releaseInfo.getPlanRelease().getMajorVersion() + "-"
-					+ releaseInfo.getPlanRelease().getMinorVersion() + "-"
-					+ releaseInfo.getPlanRelease().getIntegration() + "-" + (releaseInfo.getBuildId());
-		} else {
-			nextBuild = releaseInfo.getPlanRelease().getMajorVersion() + "-"
-					+ releaseInfo.getPlanRelease().getMinorVersion() + "-"
-					+ releaseInfo.getPlanRelease().getIntegration() + "-" + (releaseInfo.getBuildId());
+			nextBuild = releaseInfo.getPlanRelease().getMajorVersion() + "-" + releaseInfo.getPlanRelease().getMinorVersion() + "-" + releaseInfo.getPlanRelease().getIntegration() + "-" + (releaseInfo.getBuildId());
+		} 
+		else {
+				nextBuild = releaseInfo.getPlanRelease().getMajorVersion() + "-" + releaseInfo.getPlanRelease().getMinorVersion() + "-" + releaseInfo.getPlanRelease().getIntegration() + "-" + (releaseInfo.getBuildId());
 		}
-
-		return nextBuild;
-
+		return new ResponseEntity(nextBuild, HttpStatus.OK);
+	
 	}
-
-	@Override
-	public List<String> getSuccessfulVersions(String project) {
-		List<String> list = new ArrayList<>();
-		List<ReleaseInfo> releases = releaseInfoRepository.findByProjectAndStatus(project, "Checked");
-
-		for (ReleaseInfo releaseInfo : releases) {
-			String nextBuild = releaseInfo.getPlanRelease().getMajorVersion() + "-"
-					+ releaseInfo.getPlanRelease().getMinorVersion() + "-"
-					+ releaseInfo.getPlanRelease().getIntegration() + "-" + (releaseInfo.getBuildId());
-			list.add(nextBuild);
-		}
-		return list;
-
-	}
-
-	@Override
-	public String getSuccessfulVersions2(String project) {
-		List<ReleaseInfo> releases = releaseInfoRepository.findByProjectAndStatus(project, "Checked");
-		String nextBuild ="";
-		for (ReleaseInfo releaseInfo : releases) {
-			 nextBuild += releaseInfo.getPlanRelease().getMajorVersion() + "-"
-					+ releaseInfo.getPlanRelease().getMinorVersion() + "-"
-					+ releaseInfo.getPlanRelease().getIntegration() + "-" + (releaseInfo.getBuildId())+"\n";
 		
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
+	public ResponseEntity<?> getSuccessfulVersions(String project) {
+		
+		List<ReleaseInfo> releases = releaseInfoRepository.findByProjectAndStatus(project, "Checked");
+		ReleaseInfo releaseInfo2 = releaseInfoRepository.findTop1ByProjectOrderByBuildIdDesc(project);
+		List<String> list = new ArrayList<>();
+		
+		if (releaseInfo2 == null) {
+			return new ResponseEntity("Projet n'existe pas", HttpStatus.NOT_FOUND);
 		}
-		return nextBuild;
+		
+		for (ReleaseInfo releaseInfo : releases) {
+			String successfulVersions = releaseInfo.getPlanRelease().getMajorVersion() + "-" + releaseInfo.getPlanRelease().getMinorVersion() + "-" + releaseInfo.getPlanRelease().getIntegration() + "-" + (releaseInfo.getBuildId());
+			list.add(successfulVersions);
+		}
+		return new ResponseEntity(list, HttpStatus.OK);
+	
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
+	public ResponseEntity<?> getSuccessfulVersions2(String project) {
+		
+		List<ReleaseInfo> releases = releaseInfoRepository.findByProjectAndStatus(project, "Checked");
+		ReleaseInfo releaseInfo2 = releaseInfoRepository.findTop1ByProjectOrderByBuildIdDesc(project);
+		String successfulVersions ="";
+		
+		if (releaseInfo2 == null) {
+			return new ResponseEntity("Projet n'existe pas", HttpStatus.NOT_FOUND);
+		}
+		
+		for (ReleaseInfo releaseInfo : releases) {
+			successfulVersions += releaseInfo.getPlanRelease().getMajorVersion() + "-" + releaseInfo.getPlanRelease().getMinorVersion() + "-" + releaseInfo.getPlanRelease().getIntegration() + "-" + (releaseInfo.getBuildId())+"\n";
+		}
+		return new ResponseEntity(successfulVersions, HttpStatus.OK);
+		
 	}
 
 }

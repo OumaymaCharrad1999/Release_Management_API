@@ -1,7 +1,5 @@
 package com.releasemanagementapi.api;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,8 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.releasemanagementapi.dto.PlanReleaseDTO;
-import com.releasemanagementapi.model.PlanRelease;
-import com.releasemanagementapi.model.ReleaseInfo;
 import com.releasemanagementapi.service.PlanReleaseService;
 
 @RestController
@@ -26,25 +22,26 @@ public class PlanReleaseController {
 	@PostMapping // Map ONLY POST Requests
 	public ResponseEntity<?> addNewPlanRelease(@RequestBody PlanReleaseDTO planReleaseDTO) {
 
-		return planReleaseService.save(planReleaseDTO);
+		return planReleaseService.addNewPlanRelease(planReleaseDTO);
 
 	}
 	
 	@GetMapping("/{project}")
-	public String prepareNextBuild(@PathVariable String project) {
+	public ResponseEntity<?> prepareNextBuildRelease(@PathVariable String project) {
 		
 		return planReleaseService.prepareNextBuildRelease(project);
 		
 	}
 	
 	@GetMapping("/get-successful-versions/{project}")
-	public List<String> getSuccessfulVersions(@PathVariable String project) {
+	public ResponseEntity<?> getSuccessfulVersions(@PathVariable String project) {
 
 		return planReleaseService.getSuccessfulVersions(project);
 
 	}
+	
 	@GetMapping("/get-successful-versions2/{project}")
-	public String getSuccessfulVersions2(@PathVariable String project) {
+	public ResponseEntity<?> getSuccessfulVersions2(@PathVariable String project) {
 
 		return planReleaseService.getSuccessfulVersions2(project);
 

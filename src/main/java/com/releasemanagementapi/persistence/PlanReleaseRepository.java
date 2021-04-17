@@ -6,4 +6,7 @@ import com.releasemanagementapi.model.PlanRelease;
 
 public interface PlanReleaseRepository extends JpaRepository<PlanRelease, Long> {
 
+	boolean existsByMajorVersionAndMinorVersionAndIntegration(Integer majorVersion, Integer minorVersion,
+			Integer integration);
+
 }

@@ -3,6 +3,7 @@ package com.releasemanagementapi.api;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.releasemanagementapi.model.ReleaseInfo;
 import com.releasemanagementapi.service.ReleaseInfoService;
+
+import javassist.NotFoundException;
 
 
 @RestController
@@ -24,14 +27,20 @@ public class ReleaseInfoController {
 	private ReleaseInfoService releaseInfoService;
 
 	@GetMapping("/{project}")
-	public List<ReleaseInfo> getByProject(@PathVariable String project) {
+	public ResponseEntity<?> getByProject(@PathVariable String project) {
 
-		return releaseInfoService.getByProject(project);
+		try {
+			return releaseInfoService.getByProject(project);
+		} catch (NotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 
 	}
 	
 	@PatchMapping("/{project}/{status}")
-	public ReleaseInfo updateStatus(@PathVariable String project, @PathVariable String status) {
+	public ResponseEntity<?> updateStatus(@PathVariable String project, @PathVariable String status) {
 
 		try {
 			return releaseInfoService.updateStatus(project, status);

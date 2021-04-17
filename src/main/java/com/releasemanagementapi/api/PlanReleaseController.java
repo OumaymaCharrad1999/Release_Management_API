@@ -3,6 +3,7 @@ package com.releasemanagementapi.api;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +24,7 @@ public class PlanReleaseController {
 	private PlanReleaseService planReleaseService;
 	
 	@PostMapping // Map ONLY POST Requests
-	public PlanRelease addNewPlanRelease(@RequestBody PlanReleaseDTO planReleaseDTO) {
+	public ResponseEntity<?> addNewPlanRelease(@RequestBody PlanReleaseDTO planReleaseDTO) {
 
 		return planReleaseService.save(planReleaseDTO);
 
@@ -37,9 +38,15 @@ public class PlanReleaseController {
 	}
 	
 	@GetMapping("/get-successful-versions/{project}")
-	public List<ReleaseInfo> getSuccessfulVersions(@PathVariable String project) {
+	public List<String> getSuccessfulVersions(@PathVariable String project) {
 
 		return planReleaseService.getSuccessfulVersions(project);
+
+	}
+	@GetMapping("/get-successful-versions2/{project}")
+	public String getSuccessfulVersions2(@PathVariable String project) {
+
+		return planReleaseService.getSuccessfulVersions2(project);
 
 	}
 	

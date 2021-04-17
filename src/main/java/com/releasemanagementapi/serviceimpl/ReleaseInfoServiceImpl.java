@@ -3,6 +3,8 @@ package com.releasemanagementapi.serviceimpl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.releasemanagementapi.model.ReleaseInfo;
@@ -23,24 +25,29 @@ public class ReleaseInfoServiceImpl implements ReleaseInfoService {
 	ReleaseInfoRepository repo;
 
 	@Override
-	public List<ReleaseInfo> getByProject(String project) {
+	public ResponseEntity<?> getByProject(String project) throws NotFoundException {
+		ReleaseInfo releaseInfo = repo.findTop1ByProjectOrderByBuildIdDesc(project);
 
-		return repo.findByProject(project);
+		if (releaseInfo == null) {
+
+			return new ResponseEntity("Projet n'existe pas", HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity(repo.findByProject(project), HttpStatus.OK);
 
 	}
 
 	@Override
-	public ReleaseInfo updateStatus(String project, String status) throws Exception {
+	public ResponseEntity<?> updateStatus(String project, String status) throws Exception {
 
 		ReleaseInfo releaseInfo = repo.findTop1ByProjectOrderByBuildIdDesc(project);
-		
+
 		if (releaseInfo == null) {
-			throw new NotFoundException("Projet n'existe pas");
+			return new ResponseEntity("Projet n'existe pas", HttpStatus.NOT_FOUND);
 		}
-		
+
 		releaseInfo.setStatus(status);
 		ReleaseInfo result = repo.save(releaseInfo);
-		return result;
+		 	return new ResponseEntity(result, HttpStatus.OK);
 
 	}
 

@@ -9,6 +9,5 @@ public interface PlanReleaseService {
 	ResponseEntity<?> addNewPlanRelease(PlanReleaseDTO request);
 	public ResponseEntity<?> prepareNextBuildRelease(String project);
 	ResponseEntity<?> getSuccessfulVersions(String project);
-	ResponseEntity<?> getSuccessfulVersions2(String project);
 	
 }

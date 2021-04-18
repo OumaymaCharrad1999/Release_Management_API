@@ -40,11 +40,4 @@ public class PlanReleaseController {
 
 	}
 	
-	@GetMapping("/get-successful-versions2/{project}")
-	public ResponseEntity<?> getSuccessfulVersions2(@PathVariable String project) {
-
-		return planReleaseService.getSuccessfulVersions2(project);
-
-	}
-	
 }

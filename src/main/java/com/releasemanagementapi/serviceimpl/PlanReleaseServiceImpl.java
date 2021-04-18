@@ -95,23 +95,4 @@ public class PlanReleaseServiceImpl implements PlanReleaseService {
 	
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@Override
-	public ResponseEntity<?> getSuccessfulVersions2(String project) {
-		
-		List<ReleaseInfo> releases = releaseInfoRepository.findByProjectAndStatus(project, "Checked");
-		ReleaseInfo releaseInfo2 = releaseInfoRepository.findTop1ByProjectOrderByBuildIdDesc(project);
-		String successfulVersions ="";
-		
-		if (releaseInfo2 == null) {
-			return new ResponseEntity("Projet n'existe pas", HttpStatus.NOT_FOUND);
-		}
-		
-		for (ReleaseInfo releaseInfo : releases) {
-			successfulVersions += releaseInfo.getPlanRelease().getMajorVersion() + "-" + releaseInfo.getPlanRelease().getMinorVersion() + "-" + releaseInfo.getPlanRelease().getIntegration() + "-" + (releaseInfo.getBuildId())+"\n";
-		}
-		return new ResponseEntity(successfulVersions, HttpStatus.OK);
-		
-	}
-
 }

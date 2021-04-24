@@ -27,6 +27,13 @@ public class ReleaseInfoController {
 
 	}
 	
+	@GetMapping("get-status/{project}")
+	public ResponseEntity<?> getStatus(@PathVariable String project) {
+
+		return releaseInfoService.getStatus(project);
+
+	}
+	
 	@PatchMapping("/{project}/{status}")
 	public ResponseEntity<?> updateStatus(@PathVariable String project, @PathVariable String status) {
 

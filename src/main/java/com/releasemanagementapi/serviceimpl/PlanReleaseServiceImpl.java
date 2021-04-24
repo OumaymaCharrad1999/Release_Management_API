@@ -1,8 +1,5 @@
 package com.releasemanagementapi.serviceimpl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -66,33 +63,13 @@ public class PlanReleaseServiceImpl implements PlanReleaseService {
 			releaseInfo.setStatus("Null");
 			releaseInfo.setBuildId(releaseInfo.getBuildId() + 1);
 			releaseInfoRepository.save(releaseInfo);
-			nextBuild = releaseInfo.getPlanRelease().getMajorVersion() + "-" + releaseInfo.getPlanRelease().getMinorVersion() + "-" + releaseInfo.getPlanRelease().getIntegration() + "-" + (releaseInfo.getBuildId());
+			nextBuild = releaseInfo.getPlanRelease().getMajorVersion() + "-" + releaseInfo.getPlanRelease().getMinorVersion() + "-" + releaseInfo.getPlanRelease().getIntegration() + "-" + releaseInfo.getBuildId();
 		} 
 		else {
-				nextBuild = releaseInfo.getPlanRelease().getMajorVersion() + "-" + releaseInfo.getPlanRelease().getMinorVersion() + "-" + releaseInfo.getPlanRelease().getIntegration() + "-" + (releaseInfo.getBuildId());
+				nextBuild = releaseInfo.getPlanRelease().getMajorVersion() + "-" + releaseInfo.getPlanRelease().getMinorVersion() + "-" + releaseInfo.getPlanRelease().getIntegration() + "-" + releaseInfo.getBuildId();
 		}
 		return new ResponseEntity(nextBuild, HttpStatus.OK);
 	
 	}
 		
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@Override
-	public ResponseEntity<?> getSuccessfulVersions(String project) {
-		
-		List<ReleaseInfo> releases = releaseInfoRepository.findByProjectAndStatus(project, "Checked");
-		ReleaseInfo releaseInfo2 = releaseInfoRepository.findTop1ByProjectOrderByBuildIdDesc(project);
-		List<String> list = new ArrayList<>();
-		
-		if (releaseInfo2 == null) {
-			return new ResponseEntity("Projet n'existe pas", HttpStatus.NOT_FOUND);
-		}
-		
-		for (ReleaseInfo releaseInfo : releases) {
-			String successfulVersions = releaseInfo.getPlanRelease().getMajorVersion() + "-" + releaseInfo.getPlanRelease().getMinorVersion() + "-" + releaseInfo.getPlanRelease().getIntegration() + "-" + (releaseInfo.getBuildId());
-			list.add(successfulVersions);
-		}
-		return new ResponseEntity(list, HttpStatus.OK);
-	
-	}
-
 }

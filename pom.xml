@@ -111,7 +111,7 @@
 	<distributionManagement>
     	<snapshotRepository>
       		<id>nexus</id>
-      		<url>http://localhost:8085/nexus</url>
+      		<url>http://localhost:8085/nexus/content/repositories/releases/</url>
     	</snapshotRepository>
   	</distributionManagement>
   	

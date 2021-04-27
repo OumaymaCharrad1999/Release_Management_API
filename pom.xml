@@ -11,7 +11,7 @@
 	<artifactId>release-management-api</artifactId>
 	<packaging>war</packaging>
 	<name>release-management-api</name>
-	<version>2-3-4-8</version>
+	<version>0.0.1-SNAPSHOT</version>
 	<description>Start Application with Spring Boot</description>
 	<properties>
 		<java.version>1.8</java.version>
@@ -88,31 +88,8 @@
                 	</execution>
             	</executions>
         	</plugin>	
-        	
-        	<plugin>
-        		<groupId>org.apache.maven.plugins</groupId>
-        		<artifactId>maven-deploy-plugin</artifactId>
-      		</plugin>
 		</plugins>
-		
-		<pluginManagement>
-      		<plugins>
-      		
-        		<plugin>
-          			<groupId>org.apache.maven.plugins</groupId>
-          			<artifactId>maven-deploy-plugin</artifactId>
-        		</plugin>
-        		
-      		</plugins>
-    	</pluginManagement>
     	
 	</build>
-
-	<distributionManagement>
-    	<snapshotRepository>
-      		<id>nexus</id>
-      		<url>http://localhost:8085/nexus/content/repositories/releases/</url>
-    	</snapshotRepository>
-  	</distributionManagement>
-  	
+  
 </project>
